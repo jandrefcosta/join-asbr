@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <meta charset="UTF-8" />
+        <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Compre Já</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <script src="jquery.mask.min.js"></script>
+        <script src="js/jquery.mask.min.js"></script>
     </head>
     <body>
         <div class="container">
@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-lg-6" id="form-container">
 
-                    <form id="step_1" class="form-step">
+                    <form id="step_1" class="form-step1">
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <div class="panel-title">
@@ -70,7 +70,7 @@
                         </div>
                     </form>
 
-                    <form id="step_2" class="form-step" style="display:none">
+                    <form id="step_2" class="form-step2" style="display:none">
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <div class="panel-title">
@@ -115,7 +115,7 @@
                         </div>
                     </form>
 
-                    <div id="step_sucesso" class="form-step" style="display:none">
+                    <div id="step_sucesso" class="form-step3" style="display:none">
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <div class="panel-title">
@@ -161,15 +161,15 @@
                         setAlert('<strong>*Telefone</strong>');
                     }else{
                         submit_data = { nome:$("input[name='nome']").val(), 
-                                        data_de_nascimento: $("input[name='data_nascimento']").val(),
+                                        data_nascimento: $("input[name='data_nascimento']").val(),
                                         email: $("input[name='email']").val(),
                                         telefone: $("input[name='telefone']").val(),
                                         regiao:"",
                                         unidade:""
                                     }
 
-                        console.log(submit_data);
-                        $(this).parents('.form-step').hide().next().show();
+                        $('.form-step1').hide()
+                        $('.form-step2').show();
                     }
                 });
 
@@ -208,14 +208,31 @@
                     }else{
                         submit_data.regiao = $('.select-regiao option:selected').text();
                         submit_data.unidade = $('.select-unidade option:selected').text();
-                        console.log(submit_data);
-                    }
 
-                    //$(this).parents('.form-step').hide().next().show();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'webservice/webservice.php',
+                            data: {"data": JSON.stringify(submit_data)},
+                            dataType: 'json',
+                            success: function (msg) 
+                            {   
+                                console.log('success ' + msg.score);
+                                console.log('success ' + msg.birthday);
+                                // if (msg.data=="ok"){
+                                //     $('.form-step2').hide()
+                                //     $('.form-step3').show();
+                                // }
+                            },
 
-                    console.log("step2");
+                            error: function(xhr, textStatus, error){
+                                console.log(xhr);
+                                console.log(xhr.statusText);
+                                console.log(textStatus);
+                                console.log(error);
+                            }
+                        });
+                    } 
                 });
-
 
 
                 $('.select-regiao').change(function(event){
@@ -228,14 +245,14 @@
                             break;
                             
                         case 'Sul':
-                            $('.select-unidade').append($('<option>', {text: 'Porto Alegre'} ));
                             $('.select-unidade').append($('<option>', {text: 'Curitiba'} ));
+                            $('.select-unidade').append($('<option>', {text: 'Porto Alegre'} ));
                             break;
 
                         case 'Sudeste':
-                            $('.select-unidade').append($('<option>', {text: 'São Paulo'} ));
-                            $('.select-unidade').append($('<option>', {text: 'Rio de Janeiro'} ));
                             $('.select-unidade').append($('<option>', {text: 'Belo Horizonte'} ));
+                            $('.select-unidade').append($('<option>', {text: 'Rio de Janeiro'} ));
+                            $('.select-unidade').append($('<option>', {text: 'São Paulo'} ));
                             break;
 
                         case 'Centro-Oeste':
@@ -243,8 +260,8 @@
                             break;
 
                         case 'Nordeste' :
-                            $('.select-unidade').append($('<option>', {text: 'Salvador'} ));
                             $('.select-unidade').append($('<option>', {text: 'Recife'} ));
+                            $('.select-unidade').append($('<option>', {text: 'Salvador'} ));
                             break;
 
                         case 'Norte':
@@ -269,5 +286,6 @@
                 }
             }
         </script>
+        <script type="text/javascript" scr="js/javascript.js"></script>
     </body>
 </html>
