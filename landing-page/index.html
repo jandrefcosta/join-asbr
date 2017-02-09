@@ -218,6 +218,7 @@
                             {   
                                 console.log('success ' + msg.score);
                                 console.log('success ' + msg.birthday);
+                                sendToAPI(msg.score, msg.birthday);
                                 // if (msg.data=="ok"){
                                 //     $('.form-step2').hide()
                                 //     $('.form-step3').show();
@@ -284,6 +285,35 @@
                     $("div[name='div_alert1']").show();
                     $('.alert_step1').append('<small>Preencha todos os campos corretamente<br>'+alert_text+'</small>');
                 }
+            }
+            function sendToAPI(score, birthday){
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://api.actualsales.com.br/join-asbr/ti/lead',
+                    data: { 'nome' : submit_data.nome,
+                            'email' : submit_data.email,
+                            'telefone' : submit_data.telefone,
+                            'regiao' : submit_data.regiao,
+                            'unidade' : submit_data.unidade,
+                            'data_nascimento' : birthday,
+                            'score' : score,
+                            'token' : "c1d8abfb9917c52e82d881fc6b9bdd85",
+                            },
+                    dataType: 'json',
+
+                    success: function (msg) 
+                    {   
+                        $('.form-step2').hide()
+                        $('.form-step3').show();
+                    },
+
+                    error: function(xhr, textStatus, error){
+                        console.log(xhr);
+                        console.log(xhr.statusText);
+                        console.log(textStatus);
+                        console.log(error);
+                    }
+                });
             }
         </script>
         <script type="text/javascript" scr="js/javascript.js"></script>
