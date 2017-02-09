@@ -75,7 +75,7 @@
                                     <div class="row form-group">
                                         <div class="col-lg-6">
                                             <label>Região</label>
-                                            <select class="form-control" name="regiao">
+                                            <select class="form-control select-regiao" name="regiao">
                                                 <option value="">Selecione a sua região</option>
                                                 <option>Sul</option>
                                                 <option>Sudeste</option>
@@ -87,7 +87,7 @@
 
                                         <div class="col-lg-6">
                                             <label>Unidade</label>
-                                            <select class="form-control" name="unidade">
+                                            <select class="form-control select-unidade" name="unidade">
                                                 <option value="">Selecione a unidade mais próxima</option>
                                                 <option>???</option>
                                             </select>
@@ -127,6 +127,60 @@
                     event.preventDefault();
                     $(this).parents('.form-step').hide().next().show();
                 });
+
+                $("input[name='nome']").focusout(function(event){
+                    var input_name = $("input[name='nome']");
+                    var reg = new RegExp('^[A-zÀ-ú]');
+                    input_name.val($.trim(input_name.val()));
+
+                    /*console.log( $("input[name='nome']").val());
+                    console.log( reg.test($("input[name='nome']").val()));
+                    console.log ( $("input[name='nome']").val().indexOf(' ') > 0);*/
+
+                    if (reg.test($("input[name='nome']").val()) && $("input[name='nome']").val().indexOf(' ') > 0){
+                        console.log("valido");
+                    }
+                    else{
+                        console.log("n valido");   
+                    }
+                })
+
+                $('.select-regiao').change(function(event){
+
+                    $('.select-unidade').find('option').remove().end()
+
+                    switch($('.select-regiao option:selected').text()){
+                        case 'Selecione a sua região':
+                            $('.select-unidade').append('<option value="">Selecione a unidade mais próxima</option>');
+                            break;
+                            
+                        case 'Sul':
+                            $('.select-unidade').append($('<option>', {text: 'Porto Alegre'} ));
+                            $('.select-unidade').append($('<option>', {text: 'Curitiba'} ));
+                            break;
+
+                        case 'Sudeste':
+                            $('.select-unidade').append($('<option>', {text: 'São Paulo'} ));
+                            $('.select-unidade').append($('<option>', {text: 'Rio de Janeiro'} ));
+                            $('.select-unidade').append($('<option>', {text: 'Belo Horizonte'} ));
+                            break;
+
+                        case 'Centro-Oeste':
+                            $('.select-unidade').append($('<option>', {text: 'Brasília'} ));
+                            break;
+
+                        case 'Nordeste' :
+                            $('.select-unidade').append($('<option>', {text: 'Salvador'} ));
+                            $('.select-unidade').append($('<option>', {text: 'Recife'} ));
+                            break;
+
+                        case 'Norte':
+                            $('.select-unidade').append($('<option>', {text: 'Não possui disponibilidade'} ));
+                            break;
+
+                    }
+                })
+
             });
         </script>
     </body>
